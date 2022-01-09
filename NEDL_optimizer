@@ -1,0 +1,62 @@
+def NEDL_optimizer(prices_df):
+    
+    # calculates return matrix in %
+    returns_df = prices_df.pct_change()[1:]
+
+    # annualized return
+    r = (returns_df+1).prod() ** (252 / len(returns_df)) - 1
+
+    # covariance 
+    cov = returns_df.cov()*252
+
+    # matrix algebra model
+
+    e = np.ones(len(prices_df.columns))
+
+    # investabble universe
+
+    icov = np.linalg.inv(cov)
+
+    #risk varience
+    h = np.matmul(e, icov) 
+
+    #return
+    g = np.matmul(r, icov) 
+
+    # variance and return relationship (quadratic relationship)
+
+    a = np.sum(e*h) # constant of return
+    b = np.sum(r*h) # linear in return
+    c = np.sum(r*g) # quadratic in return
+    d = a*c - b**2  # scaling parameter
+    
+    #minimum variance and tangency portfolio
+
+    mvp = h/a #minimum variance portfoli
+    mvp_return = b/a
+    mvp_risk = (1/a)**(1/2)
+
+    tangency = g/b
+    tangency_return = c/b 
+    tangency_risk = c**(1/2)/b
+    
+    exp_return = np.arange(0,0.5, 0.001) #simmulating retruns
+    risk = (a*exp_return**2 - 2*b*exp_return + c)/d ** (1/2) #quadratic equation
+    
+    target_return = 0.10
+
+    if target_return < mvp_return:
+        optimal_portfolio = mvp
+        optimal_return = mvp_return
+        optimal_risk = mvp_risk
+    
+        return prices_df.columns.values.tolist(),optimal_portfolio, optimal_return, optimal_risk
+        
+    else:
+        l = (c-b*target_return)/d
+        m = (a*target_return-b)/d
+        optimal_portfolio = l*h + m*g
+        optimal_return = np.sum(optimal_portfolio*r)
+        optimal_risk = (a*optimal_return**2 - 2*b*optimal_return + c)/d ** (1/2) #quadratic equation
+
+        return prices_df.columns.values.tolist(),optimal_portfolio, optimal_return, optimal_risk
