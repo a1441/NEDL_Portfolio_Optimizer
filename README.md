@@ -1,2 +1,6 @@
 # NEDL_Portfolio_Optimizer
-Efficient portfolio frontier in Python function base on NEDL example (https://www.youtube.com/c/NEDLeducation)
+
+Credit: NEDL (https://www.youtube.com/c/NEDLeducation)
+
+Efficient portfolio frontier in Python function base on NEDL example 
+
