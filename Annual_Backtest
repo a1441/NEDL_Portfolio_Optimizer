@@ -1,0 +1,6 @@
+def back_test(df, months = '12', days = '31'):
+    
+    """ Creates a timeseries from the 1st period to the last by incrementing every next period to the same df.
+    Stacks dfs, so should be used carefully. We bout that life though"""
+    
+    return [df[(df.index > df.index.min()) & (df.index < f'{x}-{months}-{days}')].dropna(axis=1) for x in range(df.index.min().year,df.index.max().year+1)]
