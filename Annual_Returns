@@ -1,0 +1,24 @@
+def annual_return(n, df = df, optimize = 'on'):
+    
+    train = back_test(df)[n]
+    test = back_test(df)[n+1]
+
+    start, end = test.index.min(), test.index.max()
+    
+    if optimize == 'on':
+
+        optimizer = NEDL_optimizer(test)
+
+        opening_price = test[optimizer[0]].iloc[len(train)+1:len(train)+2,:].values[0] #this is our buying price -> test period + 1
+        closing_price = test[optimizer[0]].iloc[len(test)-1:].values[0] # this is the closing price (assuming we hold for 12m)
+
+        effective_return = sum((closing_price/opening_price-1) * optimizer[1])
+        return test[optimizer[0]].iloc[len(test)-1:].index[0], effective_return
+    
+    if optimize == 'off':
+        
+        opening_price = test.iloc[len(train)+1:len(train)+2,:].values[0] #this is our buying price -> test period + 1
+        closing_price = test.iloc[len(test)-1:].values[0] # this is the closing price (assuming we hold for 12m)
+        
+        effective_return = sum((closing_price/opening_price-1))
+        return test.iloc[len(test)-1:].index[0], effective_return
