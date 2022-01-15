@@ -7,7 +7,7 @@ def annual_return(n, df = df, optimize = 'on'):
     
     if optimize == 'on':
 
-        optimizer = NEDL_optimizer(test)
+        optimizer = NEDL_optimizer(train)
 
         opening_price = test[optimizer[0]].iloc[len(train)+1:len(train)+2,:].values[0] #this is our buying price -> test period + 1
         closing_price = test[optimizer[0]].iloc[len(test)-1:].values[0] # this is the closing price (assuming we hold for 12m)
