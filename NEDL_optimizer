@@ -1,3 +1,5 @@
+#credit NEDL: https://www.youtube.com/c/NEDLeducation
+
 def NEDL_optimizer(prices_df):
     
     # calculates return matrix in %
